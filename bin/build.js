@@ -45,10 +45,25 @@ const func = async () => {
     fs.mkdirSync(builddirectory)
   } catch {}
 
+  const built = [],
+    copied = []
+
   files.forEach((file) => {
     const stat = fs.statSync(filedirectory + file)
     if (stat.isDirectory()) return
-    if (path.extname(file) != '.ejs') return
+
+    switch (path.extname(file)) {
+      case '.ejs':
+        break
+      default:
+        fs.copyFileSync(
+          filedirectory + file,
+          builddirectory + file,
+          fs.constants.COPYFILE_FICLONE,
+        )
+        copied.push(file)
+        return
+    }
 
     let html
     try {
@@ -62,13 +77,20 @@ const func = async () => {
       return
     }
 
+    built.push(file)
     fs.writeFileSync(builddirectory + file.split('.')[0] + '.html', html())
   })
   buildText.stop()
 
-  files.forEach((file) => {
+  built.forEach((file) => {
     console.log('└  ' + file)
   })
+  if (copied != null || (undefined && copied.length != 0)) {
+    console.log(chalk.green('✓ ') + 'Copied non ejs files Files')
+    copied.forEach((file) => {
+      console.log('└  ' + file)
+    })
+  }
 }
 
 module.exports = func

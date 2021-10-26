@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "node bin/index.js"
+    "dev": "node bin/index.js",
+    "update": "npm uninstall staticejs -g && npm install . -g"
   },
   "bin": {
     "stejs": "./bin/index.js"
