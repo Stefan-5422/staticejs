@@ -3,6 +3,8 @@ const fs = require('fs')
 const path = require('path')
 const waitingText = require('../lib/waitingText')
 const ejs = require('ejs')
+const lru = require('lru-cache')
+ejs.cache = new lru(100)
 
 const func = async () => {
   //Parsing the config file
@@ -52,6 +54,7 @@ const func = async () => {
     try {
       html = ejs.compile(fs.readFileSync(filedirectory + file, 'utf-8'), {
         async: false,
+        filename: file,
       })
     } catch (ex) {
       console.log(ex)
